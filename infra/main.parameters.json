@@ -1,0 +1,15 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": { "value": "swedencentral" },
+    "environmentName": { "value": "trabant-leap-agent-dev-6f96" },
+    "resourceGroupName": { "value": "rg-trabant-leap-agent-dev-6f96" },
+    "appName": { "value": "app-trabant-leap-agent-dev-6f96" },
+    "planName": { "value": "asp-trabant-leap-agent-dev-6f96" },
+    "identityName": { "value": "id-trabant-leap-agent-dev-6f96" },
+    "sessionId": { "value": "6f967740-981e-4c76-8ac6-d3e48603cb56" },
+    "createdAt": { "value": "2026-11-26T15:08:49.4750883Z" },
+    "deployedBy": { "value": "htb-demo-operator" }
+  }
+}

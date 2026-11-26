@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A fictional, fixture-first automotive service prototype.">
+  <title>Trabant Leap Agent · Fictional demo</title>
+  <link rel="icon" href="/brand.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to demo</a>
+  <header class="masthead">
+    <div class="shell masthead-inner">
+      <a class="brand" href="#main">
+        <img src="/brand.svg" width="40" height="40" alt="">
+        <span>Trabant <small>Leap Lab</small></span>
+      </a>
+      <a class="source-nav" href="#source-library">Fictional sources <span aria-hidden="true">↓</span></a>
+      <span class="demo-badge">Fictional demo</span>
+    </div>
+  </header>
+
+  <main id="main" class="shell" tabindex="-1">
+    <section class="hero" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">Mobility service prototype</p>
+        <h1 id="page-title">Trabant Leap Agent</h1>
+        <p class="hero-lede">A fictional service desk that shows its sources, asks before acting, and knows when to stop.</p>
+      </div>
+      <div class="hero-note">
+        <span class="hero-mode">Simulation mode</span>
+        <p>No personal data.<br>No real bookings or contacts.</p>
+      </div>
+    </section>
+
+    <div class="workspace">
+      <section class="panel" aria-labelledby="scenario-heading">
+        <p class="eyebrow">01 / Scenario</p>
+        <h2 id="scenario-heading" tabindex="-1">Choose a demo scenario</h2>
+        <p class="section-intro">Select a preset to see how the agent responds. There is no free-text input.</p>
+        <noscript><p>This demo needs JavaScript to load its fictional scenarios.</p></noscript>
+        <ul id="scenario-list" class="scenario-list" aria-label="Demo scenarios"></ul>
+      </section>
+
+      <section class="panel response-panel" aria-labelledby="response-heading">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">02 / Outcome</p>
+            <h2 id="response-heading">Agent response</h2>
+          </div>
+          <a id="back-to-scenarios" class="quiet-link" href="#scenario-heading" hidden>Back to scenarios</a>
+        </div>
+        <p id="announcement" class="visually-hidden" role="status"></p>
+        <div id="response" class="outcome" data-outcome="idle">
+          <span class="outcome-badge">Awaiting a scenario</span>
+          <h3>Try a preset to get started</h3>
+          <p>See a cited answer, preview a fictional appointment, or explore when the agent stops instead of guessing.</p>
+        </div>
+      </section>
+    </div>
+
+    <section id="source-library" class="panel library" aria-labelledby="library-heading" tabindex="-1">
+      <p class="eyebrow">03 / Evidence</p>
+      <h2 id="library-heading">Fictional source library</h2>
+      <p class="section-intro">These versioned excerpts exist only for this demo. They do not apply to real vehicles.</p>
+      <div id="source-list" class="source-grid"></div>
+    </section>
+  </main>
+
+  <footer class="shell site-footer">
+    <span>Trabant Leap Agent</span>
+    <span>Fictional prototype · Not a vehicle support service</span>
+  </footer>
+</body>
+</html>

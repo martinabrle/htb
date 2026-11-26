@@ -224,3 +224,9 @@ __marimo__/
 
 # Word documents
 *.docx
+
+# Local Azure onboarding state
+.copilot-azure/
+
+# Node.js dependencies
+node_modules/

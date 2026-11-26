@@ -15,6 +15,8 @@ Trabant Leap Agent is a secure, reusable agentic solution that helps customers, 
 
 Trabant is a fictional European mobility company that sells compact electric vehicles through a dealer and service-partner network. Leap Agent unifies fragmented owner support, workshop coordination, warranty guidance, and dealer knowledge into a single governed experience delivered through Microsoft Teams, web chat, and embedded customer channels.
 
+**Proof of concept:** The [runnable demo](../README.md) uses a single web channel and fictional fixtures to show cited support answers, explicit confirmation of a simulated appointment, and safe escalation. It does not use an AI model, diagnose vehicles, send bookings, or contact an advisor. The [POC architecture](../docs/architecture.md) distinguishes the current implementation from the production design below.
+
 ## 2. Problem Clarity and Customer Relevance
 
 Trabant customers and service partners currently navigate disconnected manuals, dealer portals, call centers, workshop systems, and warranty processes. A customer with a warning light or charging issue may repeat the same information several times, while an advisor manually searches documents, checks vehicle eligibility, identifies a workshop, and creates a case. The result is slow resolution, inconsistent advice, avoidable contact-center demand, and missed service revenue.
@@ -64,7 +66,7 @@ The innovation is not a generic chatbot. Leap Agent combines grounded conversati
 
 ***Final Solution Requirement*** *Deliberate, justified design; scales; realistic route to a real product.*
 
-The solution is technically feasible because the prototype uses managed Microsoft services and narrow, well-defined tools. A Copilot Studio front end handles conversations, Azure AI Foundry provides model and orchestration capabilities, Azure AI Search supplies grounded retrieval, and secured connectors invoke Trabant business APIs. The architecture separates conversational reasoning from deterministic transactions, enabling independent scaling, testing, and governance.
+The proposed production architecture uses managed Microsoft services and narrow, well-defined tools. A Copilot Studio front end handles conversations, Azure AI Foundry provides model and orchestration capabilities, Azure AI Search supplies grounded retrieval, and secured connectors invoke Trabant business APIs. The architecture separates conversational reasoning from deterministic transactions, enabling independent scaling, testing, and governance.
 
 | Layer | Microsoft capability | Purpose |
 | --- | --- | --- |
@@ -79,7 +81,7 @@ The solution is technically feasible because the prototype uses managed Microsof
 
 ![Layered architecture showing channels, identity, Copilot Studio, Azure AI Foundry orchestration, grounded knowledge, controlled business actions, human handoff, and governance services.](./HTB-Idea-Architecture.png)
 
-*Figure 1. Conceptual architecture for Trabant Leap Agent. Conversational reasoning is separated from permission-checked, deterministic business transactions.*
+*Figure 1. Production reference architecture for Trabant Leap Agent. Conversational reasoning is separated from permission-checked, deterministic business transactions.*
 
 ### Core architectural components.
 
