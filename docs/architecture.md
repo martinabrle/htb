@@ -20,6 +20,12 @@ flowchart LR
 
 Pending drafts expire after ten minutes and are lost when the process restarts. Run one instance for the POC. There is no shared session data, external tool execution, persistent storage, or real customer data. `/healthz` measures liveness; `/readyz` checks that assets and fixture references are available.
 
+## Demo walkthrough
+
+The [recorded local walkthrough](./trabant-leap-agent-demo.webm) shows the cited warranty answer, the appointment preview and explicit confirmation, the simulated safety handoff, and the insufficient-evidence response.
+
+The browser keeps the selected preset visible alongside the outcome. Citation links open the exact bundled excerpt and offer a return to the current response. Switching scenarios or resetting cancels pending browser requests and clears the current view; it does not undo a server response. If an appointment draft becomes invalid, the UI keeps the chosen workshop and slot but requires a fresh preview and opt-in. These interactions do not change the API contract or hosting topology.
+
 ## Azure deployment boundary
 
 [Bicep](../infra/main.bicep) defines a single Linux App Service F1 instance and a dedicated user-assigned identity in Sweden Central. App Service terminates HTTPS and handles sign-in with a single-tenant Entra registration. Its authorization policy allows only the deploying user's Entra object ID. The managed identity supplies a federated client assertion instead of a secret. The hosting endpoint is network-reachable, not a private endpoint; the identity policy restricts access to the demo.
@@ -33,6 +39,6 @@ The [deployment script](../infra/deploy.ps1) checks that the live policy matches
 3. Show the simulated handoff and the insufficient-evidence outcome without fabricating guidance.
 4. Verify the Azure deployment denies unsigned-in users and allows an approved tester before handing over the link.
 
-All four checks passed in the restricted Azure demo. Anonymous requests to `/` and `/api/demo` returned `401`, both health routes returned `200`, and the approved test account completed the browser walkthrough. The one-user allowlist was verified in Azure configuration; a second signed-in account was not tested.
+All four checks passed at the previous Azure deployment. Anonymous requests to `/` and `/api/demo` returned `401`, both health routes returned `200`, and the approved test account completed the browser walkthrough. The one-user allowlist was verified in Azure configuration; a second signed-in account was not tested. The polished walkthrough was tested locally and is not a new Azure deployment.
 
 Pilot business targets in the concept document are hypotheses, not demo results. Production work would require approved source data, broader safety evaluation, per-user authorization, durable idempotency and audit records, and the platform integrations in the [reference diagram](../idea/HTB-Idea-Architecture.png).

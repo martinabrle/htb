@@ -18,10 +18,14 @@ See the [POC architecture](./docs/architecture.md) for the implementation bounda
 
 ## Demo paths
 
-- **Warranty coverage** and **Maintenance schedule** quote versioned fictional text. Follow the citation link to its exact excerpt in the **Fictional source library**.
-- **Workshop appointment**: select **Fictional workshop** and **Fictional time slot**, then **Preview appointment draft**. Check **I confirm this fictional appointment draft.** and choose **Confirm simulated appointment**. No booking is sent.
+[Watch the demo video (WebM)](./docs/trabant-leap-agent-demo.webm), recorded against the local app.
+
+- **Warranty coverage** and **Maintenance schedule** quote versioned fictional text. Follow the citation to its exact excerpt in the **Fictional source library**, then use **Back to agent response** to return without losing your place.
+- **Workshop appointment**: select **Fictional workshop** and **Fictional time slot**, then **Preview appointment draft**. Use **Edit appointment details** to revise the draft, or check **I confirm this fictional appointment draft.** and choose **Confirm simulated appointment**. No booking is sent. If a draft becomes invalid, preview the same selection again and confirm the new draft.
 - **Urgent safety concern** immediately shows **Simulated human handoff**. No diagnosis is made and no one is contacted.
 - **Unsupported guidance** shows **Insufficient evidence**, with no answer or action.
+
+Use **Reset demo** to clear the current response and return focus to the last selected scenario. If the scenario list fails to load, **Retry loading scenarios** retries without refreshing the page.
 
 The scenario buttons have `data-scenario` attributes; `#response[data-outcome]` exposes the current result kind. The draft has its own `[data-outcome="appointment_draft"]`.
 
