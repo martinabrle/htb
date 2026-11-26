@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Target system architecture for Trabant Leap Agent, a fictional mobility support service.">
+  <title>Trabant Leap Agent | Target System Architecture</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 15mm 16mm 16mm;
+      @bottom-left {
+        content: "TRABANT LEAP AGENT  /  TARGET ARCHITECTURE";
+        color: #3c5d50;
+        font: 700 8pt "Segoe UI", sans-serif;
+      }
+      @bottom-right {
+        content: counter(page) " / " counter(pages);
+        color: #3c5d50;
+        font: 700 8pt "Segoe UI", sans-serif;
+      }
+    }
+    :root {
+      --ink: #17332d;
+      --muted: #425e55;
+      --pine: #1e5647;
+      --line: #c9d9cf;
+      --wash: #eef5ef;
+      --paper: #fff;
+      --lime: #c6efaa;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); font: 10.35pt/1.44 "Segoe UI", "Arial", sans-serif; }
+    h1, h2, h3, h4 { margin: 0; line-height: 1.15; }
+    h2 { font-size: 26pt; letter-spacing: -.035em; }
+    h3 { margin: 4mm 0 1.4mm; font-size: 13pt; }
+    h4 { font-size: 10.7pt; }
+    p { margin: 0 0 2.5mm; }
+    p:last-child { margin-bottom: 0; }
+    a { color: #155541; text-underline-offset: .14em; }
+    code { overflow-wrap: anywhere; font: .86em Consolas, monospace; }
+    ul, ol { margin: 2mm 0 3mm; padding-inline-start: 5.5mm; }
+    li + li { margin-top: 1.2mm; }
+    strong { font-weight: 700; }
+    h2, h3, h4, caption { break-after: avoid; }
+    p, li { orphans: 3; widows: 3; }
+    .chapter { margin-bottom: 5mm; padding-bottom: 4mm; border-bottom: .35mm solid var(--line); }
+    .kicker { margin-bottom: 1.8mm; color: var(--pine); font-size: 9pt; font-weight: 750; letter-spacing: .11em; text-transform: uppercase; }
+    .lead { max-width: 75ch; margin-top: 2.5mm; color: var(--muted); font-size: 11.5pt; line-height: 1.4; }
+    .small { color: var(--muted); font-size: 9pt; }
+    .rule, .note, .warning { margin-block: 3.5mm; padding: 3mm 4mm; border-inline-start: 1mm solid var(--pine); background: var(--wash); break-inside: avoid; }
+    .warning { border-color: #9a5626; background: #fbf2e7; }
+    .rule strong, .note strong { color: var(--pine); }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3mm; margin-block: 3mm; }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .card { padding: 3.3mm; border: .28mm solid var(--line); border-radius: 2mm; background: #f7faf7; break-inside: avoid; }
+    .card h3, .card h4 { margin: 0 0 1.5mm; }
+    .card p { font-size: 9.9pt; }
+    table { width: 100%; margin-block: 2.5mm 3.5mm; border-collapse: collapse; font-size: 9.55pt; line-height: 1.34; }
+    caption { text-align: left; margin-bottom: 1.2mm; color: var(--muted); font-size: 9pt; }
+    col.key { width: 21%; }
+    col.equal { width: 39.5%; }
+    col.route { width: 39%; }
+    col.period { width: 17%; }
+    thead { background: var(--pine); color: white; }
+    th, td { padding: 1.85mm 2.3mm; border-bottom: .24mm solid var(--line); text-align: start; vertical-align: top; overflow-wrap: anywhere; }
+    tbody tr:nth-child(even) { background: #f4f8f4; }
+    tbody th { color: var(--ink); }
+    tr { break-inside: avoid; }
+    figure { margin: 3mm 0; break-inside: avoid; }
+    figcaption { margin-top: 1.5mm; color: var(--muted); font-size: 8.95pt; line-height: 1.35; }
+    .diagram { display: block; width: 100%; height: auto; }
+    .diagram text { fill: #173b32; font-family: "Segoe UI", Arial, sans-serif; }
+    .diagram .title { font-size: 16px; font-weight: 700; }
+    .diagram .sub { font-size: 13px; }
+    .diagram .band-label { font-size: 12px; font-weight: 700; letter-spacing: 1px; }
+    .diagram .box { fill: #fff; stroke: #92b1a3; stroke-width: 1.2; }
+    .diagram .emphasis { fill: #e1f0de; }
+    .diagram .arrow { stroke: #336753; stroke-width: 1.7; fill: none; }
+    .diagram .boundary { fill: #f1f6f2; stroke: #b7ccbf; }
+    .diagram .hint { fill: #48665b; font-size: 12px; }
+    .cover-block { margin: 4mm 0 6mm; padding: 14mm 11mm 12mm; border-radius: 4mm; background: #173b32; color: #f3fff5; }
+    .cover-block .kicker { color: var(--lime); }
+    .cover h1 { max-width: 14ch; font-size: 39pt; letter-spacing: -.055em; line-height: 1.01; }
+    .cover-subtitle { margin-top: 4mm; font-size: 18pt; }
+    .cover-deck { max-width: 60ch; margin-top: 5mm; color: #dbeee2; font-size: 12pt; }
+    .cover-divider { width: 28mm; height: .8mm; margin-top: 7mm; background: var(--lime); }
+    .cover-meta { margin: 6mm 0; }
+    .cover-meta div { display: grid; grid-template-columns: 33mm 1fr; gap: 3mm; padding: 2mm 0; border-bottom: .24mm solid var(--line); }
+    .cover-meta dt { font-weight: 700; }
+    .cover-meta dd { margin: 0; }
+    .contents { margin: 3mm 0 5mm; padding: 0; list-style: none; }
+    .contents li { display: flex; align-items: baseline; gap: 2mm; margin: 0; padding: 1.25mm 0; border-bottom: .23mm solid var(--line); }
+    .contents li > span { margin-inline-start: auto; min-width: 7mm; color: var(--muted); font-variant-numeric: tabular-nums; text-align: end; }
+    .steps { padding-inline-start: 6.5mm; }
+    .steps li::marker { color: var(--pine); font-weight: 800; }
+    .sources { columns: 2; column-gap: 8mm; margin-block-start: 2.5mm; padding-inline-start: 6mm; font-size: 9.3pt; }
+    .sources li { margin: 0 0 2mm; break-inside: avoid; }
+    @media screen {
+      body { background: #e9f1eb; }
+      .sheet { max-width: 210mm; margin: 5mm auto; padding: clamp(5mm, 5vw, 16mm); background: var(--paper); }
+    }
+    @media print {
+      body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .sheet + .sheet { break-before: page; }
+    }
+    @media screen and (max-width: 580px) {
+      .grid, .grid.three { grid-template-columns: 1fr; }
+      .sources { columns: 1; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <section class="sheet cover" id="cover" aria-labelledby="title">
+    <div class="cover-block">
+      <p class="kicker">Hack to Build / Architecture proposal</p>
+      <h1 id="title">Trabant<br>Leap Agent</h1>
+      <p class="cover-subtitle">Target system architecture</p>
+      <p class="cover-deck">A blueprint for a mobility support service that cites approved policy, asks before acting, and hands sensitive decisions to people.</p>
+      <div class="cover-divider" aria-hidden="true"></div>
+    </div>
+    <div class="grid three">
+      <div class="card"><h3>Cite the source</h3><p>Answer from approved, applicable evidence. Abstain when the evidence is missing or conflicting.</p></div>
+      <div class="card"><h3>Ask before acting</h3><p>Let the agent propose. Let authorized services confirm, execute, and record a transaction.</p></div>
+      <div class="card"><h3>Hand off safely</h3><p>Give urgent requests priority and a clear human path, even when AI or a partner service is unavailable.</p></div>
+    </div>
+    <dl class="cover-meta">
+      <div><dt>Edition</dt><dd>1.0 &nbsp; / &nbsp; 26 November 2026</dd></div>
+      <div><dt>Status</dt><dd>Proposed target design; not an implementation or deployment record</dd></div>
+      <div><dt>Audience</dt><dd>Product, platform, security, data, service operations, and delivery partners</dd></div>
+      <div><dt>Repository</dt><dd><a href="https://github.com/martinabrle/htb">github.com/martinabrle/htb</a></dd></div>
+    </dl>
+    <div class="note"><strong>Fictional scenario.</strong> This architecture is for the Trabant Leap Agent demonstration concept. It is not vehicle guidance, a statement of production readiness, or approval to process real customer data.</div>
+  </section>
+
+  <section class="sheet" id="contents" aria-labelledby="contents-title">
+    <header class="chapter">
+      <p class="kicker">Reader's guide</p>
+      <h2 id="contents-title">Contents</h2>
+      <p class="lead">Start with the logical design, then follow a request from its channel through identity, evidence, confirmation, and operations. Numbered citations refer to the appendix.</p>
+    </header>
+    <nav aria-label="Document contents">
+      <ol class="contents">
+        <li><a href="#scope">01 / Scope, outcomes, and demo baseline</a><span>3</span></li>
+        <li><a href="#logical">02 / Logical architecture</a><span>4</span></li>
+        <li><a href="#experience">03 / Channels and user journeys</a><span>5</span></li>
+        <li><a href="#identity">04 / Identity and authorization</a><span>6</span></li>
+        <li><a href="#agent">05 / AI runtime and guardrails</a><span>7</span></li>
+        <li><a href="#grounding">06 / Knowledge and citations</a><span>8</span></li>
+        <li><a href="#transactions">07 / Confirming and executing actions</a><span>9</span></li>
+        <li><a href="#handoff">08 / Human handoff and failure behavior</a><span>10</span></li>
+        <li><a href="#topology">09 / Azure network and hosting topology</a><span>11</span></li>
+        <li><a href="#data">10 / Data ownership, privacy, and governance</a><span>12</span></li>
+        <li><a href="#reliability">11 / Reliability and disaster recovery</a><span>13</span></li>
+        <li><a href="#operations">12 / Operational signals and response</a><span>14</span></li>
+        <li><a href="#delivery">13 / Environments, delivery, and security checks</a><span>15</span></li>
+        <li><a href="#rollout">14 / Rollout and acceptance criteria</a><span>16</span></li>
+        <li><a href="#decisions">15 / Sizing, costs, and open decisions</a><span>17</span></li>
+        <li><a href="#references">Appendix / References and design vocabulary</a><span>18</span></li>
+      </ol>
+    </nav>
+    <div class="grid">
+      <div class="card"><h3>How to read claims</h3><p><strong>Implemented</strong> means present in the demo. <strong>Target</strong> means proposed. A <strong>gate</strong> requires evidence or sign-off before the relevant capability is opened.</p></div>
+      <div class="card"><h3>What this proposal leaves open</h3><p>Region and feature availability, model quota, partner contracts, licensing, retention, and service levels require validation. The document does not select a subscription or provision resources.</p></div>
+    </div>
+    <p class="small">Starting points: <a href="https://github.com/martinabrle/htb/blob/main/idea/HTB-Idea-Review-Mobility-solution.md">Hack to Build concept</a>, <a href="https://github.com/martinabrle/htb/blob/main/idea/HTB-Idea-Architecture.png">original reference diagram</a>, and <a href="https://github.com/martinabrle/htb/blob/main/docs/architecture.md">implemented demo architecture</a>.</p>
+  </section>
+
+  <section class="sheet" id="scope" aria-labelledby="scope-title">
+    <header class="chapter">
+      <p class="kicker">01 / Product and scope</p>
+      <h2 id="scope-title">What the target should deliver</h2>
+      <p class="lead">Give owners, advisors, and service partners one reliable support entry point without replacing the systems that own policy, entitlement, and booking records.</p>
+    </header>
+    <h3>Initial journeys</h3>
+    <ul>
+      <li><strong>Warranty and maintenance:</strong> explain the applicable policy for a model, market, and effective date, with links to the exact approved sections. Separately check entitlement if the user is signed in and has access to the vehicle.</li>
+      <li><strong>Workshop appointment:</strong> find eligible service partners, create a draft from live availability, and accept an explicit confirmation. Show a booking reference only after the workshop system confirms it.</li>
+      <li><strong>Safety and uncertainty:</strong> stop the automated dialogue when the request needs a person. Offer a direct fallback when a queue is unavailable. Never present a guess as policy or diagnose a vehicle.</li>
+    </ul>
+    <table>
+      <caption>Implemented baseline versus the goal</caption>
+      <colgroup><col class="key"><col class="equal"><col class="equal"></colgroup>
+      <thead><tr><th scope="col">Capability</th><th scope="col">Implemented demo</th><th scope="col">Target system</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Experience</th><td>One guided web UI. Preset, fictional inputs.</td><td>Customer web first; add Teams for employees and a dealer portal after access reviews.</td></tr>
+        <tr><th scope="row">AI and evidence</th><td>Deterministic fixture routing and versioned excerpts. No deployed model, Foundry agent, or search index.</td><td>Foundry orchestration plus authorized retrieval of approved content. Product policy still controls the outcome.</td></tr>
+        <tr><th scope="row">Actions and support</th><td>Process-local drafts, one-use confirmation, and simulated handoff. Nothing is booked or routed externally.</td><td>Durable operations, explicit confirmation, real system-of-record adapters, and queue acknowledgments.</td></tr>
+        <tr><th scope="row">Hosting</th><td>Single Linux App Service F1 instance in Sweden Central with an Entra allowlist.</td><td>Separate production workload with private backends, autoscaling, recovery, and production support ownership.</td></tr>
+      </tbody>
+    </table>
+    <h3>Non-goals and assumptions</h3>
+    <p>No diagnosis, remote vehicle commands, purchases, payment handling, automatic warranty approval, or unrestricted access to customer records. The first controlled pilot assumes one vehicle model, two service partners, limited accounts, and a reviewed market and language set. Live data and write access expand only after the applicable gates are met.</p>
+    <div class="rule"><strong>Keep the demo as a sandbox.</strong> Retain it for synthetic walkthroughs, without wiring its resources or identity into production. Its test results prove the demo flows, not production capacity, safety, reliability, or business impact.</div>
+  </section>
+
+  <section class="sheet" id="logical" aria-labelledby="logical-title">
+    <header class="chapter">
+      <p class="kicker">02 / Application boundaries</p>
+      <h2 id="logical-title">Logical architecture</h2>
+      <p class="lead">The interaction gateway owns identity and workflow state. The model has neither transaction credentials nor permission to commit an action.</p>
+    </header>
+    <figure aria-labelledby="logical-caption">
+      <svg class="diagram" viewBox="0 0 760 395" role="img" aria-labelledby="logical-image-title logical-image-desc">
+        <title id="logical-image-title">Target logical architecture</title>
+        <desc id="logical-image-desc">Customer web, Teams, and dealer portal enter through a shared interaction gateway. The gateway reads approved evidence and calls a Foundry agent, directs confirmed actions through API Management and Functions, and routes escalations to advisors. Operations and governance span all layers.</desc>
+        <defs><marker id="logical-tip" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 8 4 0 8z" fill="#336753"/></marker></defs>
+        <rect class="boundary" x="1" y="1" width="758" height="63" rx="10"/>
+        <text class="band-label" x="18" y="25">CHANNELS</text>
+        <text class="sub" x="18" y="46">Customer web and embedded chat</text>
+        <text class="sub" x="315" y="46">Teams / Copilot Studio</text>
+        <text class="sub" x="576" y="46">Dealer portal</text>
+        <path class="arrow" d="M380 65v23" marker-end="url(#logical-tip)"/>
+        <rect class="box emphasis" x="95" y="89" width="570" height="60" rx="8"/>
+        <text class="title" x="115" y="113">Interaction gateway / channel API (App Service)</text>
+        <text class="sub" x="115" y="135">Entra identity, policy gates, conversation state, confirmation, and response validation</text>
+        <path class="arrow" d="M380 150v16H123v25" marker-end="url(#logical-tip)"/>
+        <path class="arrow" d="M380 166v25" marker-end="url(#logical-tip)"/>
+        <path class="arrow" d="M380 166h257v25" marker-end="url(#logical-tip)"/>
+        <rect class="box" x="1" y="192" width="244" height="73" rx="8"/>
+        <rect class="box" x="258" y="192" width="244" height="73" rx="8"/>
+        <rect class="box" x="515" y="192" width="244" height="73" rx="8"/>
+        <text class="title" x="15" y="217">Reason and retrieve</text>
+        <text class="sub" x="15" y="238">Foundry agent + Azure OpenAI</text>
+        <text class="sub" x="15" y="255">Azure AI Search / approved excerpts</text>
+        <text class="title" x="272" y="217">Validate and transact</text>
+        <text class="sub" x="272" y="238">Private APIM + Azure Functions</text>
+        <text class="sub" x="272" y="255">Azure SQL ledger + Service Bus</text>
+        <text class="title" x="529" y="217">Route to a person</text>
+        <text class="sub" x="529" y="238">Dynamics 365 service queue</text>
+        <text class="sub" x="529" y="255">Advisor and service partner</text>
+        <path class="arrow" d="M123 266v21" marker-end="url(#logical-tip)"/>
+        <path class="arrow" d="M380 266v21" marker-end="url(#logical-tip)"/>
+        <path class="arrow" d="M637 266v21" marker-end="url(#logical-tip)"/>
+        <rect class="boundary" x="1" y="288" width="244" height="48" rx="8"/>
+        <rect class="boundary" x="258" y="288" width="244" height="48" rx="8"/>
+        <rect class="boundary" x="515" y="288" width="244" height="48" rx="8"/>
+        <text class="sub" x="15" y="317">Published manuals and policies</text>
+        <text class="sub" x="272" y="317">Warranty, dealer, and booking APIs</text>
+        <text class="sub" x="529" y="317">Dataverse cases and handoff receipt</text>
+        <rect class="box emphasis" x="1" y="350" width="758" height="44" rx="8"/>
+        <text class="sub" x="18" y="377">Cross-cutting: governance, Content Safety, Azure Monitor, Purview, Defender, and aggregated reporting</text>
+      </svg>
+      <figcaption id="logical-caption">Figure 1. The gateway mediates the three paths. Vertical lines below each path show its principal dependencies, not a shared database. The model never calls a booking provider.</figcaption>
+    </figure>
+    <h3>Who owns each outcome?</h3>
+    <div class="grid three">
+      <div class="card"><h4>Interaction</h4><p>The gateway returns a typed answer, draft, action status, or handoff. It owns the user-visible request and correlation ID.</p></div>
+      <div class="card"><h4>Records</h4><p>Content owners govern published policy. Warranty and booking providers own eligibility and acceptance. Dynamics owns support cases.</p></div>
+      <div class="card"><h4>Execution</h4><p>Functions enforce policy and persist workflow state. A human owns exceptions and decisions outside delegated policy.</p></div>
+    </div>
+    <p class="small">The <a href="#topology">network topology</a> describes how the channels reach this design. The <a href="#data">data ownership matrix</a> distinguishes a convenience copy from an authoritative record.</p>
+  </section>
+
+  <section class="sheet" id="experience" aria-labelledby="experience-title">
+    <header class="chapter">
+      <p class="kicker">03 / User experience</p>
+      <h2 id="experience-title">Channels and user journeys</h2>
+      <p class="lead">Use the same policy and outcomes across channels. Change the presentation, not the authorization or transaction rules.</p>
+    </header>
+    <table>
+      <caption>Channel responsibilities and rollout constraints</caption>
+      <colgroup><col class="key"><col class="equal"><col class="equal"></colgroup>
+      <thead><tr><th scope="col">Surface</th><th scope="col">Experience</th><th scope="col">Constraint</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Customer web</th><td>Accessible first-party chat inside the owner site. Stream status if useful; show a review card and a distinct confirm control.</td><td>Optional public answers only from the published public corpus. Sign in for vehicle data or booking. Do not request credentials or payment in chat.</td></tr>
+        <tr><th scope="row">Teams and Copilot Studio</th><td>Employee and advisor entry point with channel-native cards. Copilot Studio handles channel topics and handoff configuration; the gateway executes shared requests.</td><td>Use supported Entra authentication and tenant controls [02]. Do not let topic or connector configuration bypass the same policy checks.</td></tr>
+        <tr><th scope="row">Dealer portal</th><td>Partner-shared service context, workshop referrals, and visible handoff status.</td><td>Invite and scope partner identities. Filter by assigned workshop and active relationship at the service, not just in the UI.</td></tr>
+        <tr><th scope="row">Advisor desktop</th><td>Dynamics 365 queue, minimized context, and access to policy and case history.</td><td>Show actual queue acceptance before calling a handoff complete. Advisory and other sensitive actions remain with authorized humans.</td></tr>
+      </tbody>
+    </table>
+    <h3>One request, three possible paths</h3>
+    <ol class="steps">
+      <li><strong>Question:</strong> Accept the request with locale and scoped vehicle context. Verify that the current user can see the matching policy. Return the answer with tappable citation links and show why a model, market, or vehicle detail is needed when ambiguous.</li>
+      <li><strong>Action:</strong> Separate reading availability from committing a booking. Show workshop, time zone, time, affected vehicle reference, and any material conditions. A change or expiry requires a new preview and confirmation. The UI distinguishes pending, confirmed, unavailable, and needs-review states.</li>
+      <li><strong>Escalation:</strong> Interrupt for urgent, ambiguous safety, or sensitive requests. Offer a clear next step immediately, and display transfer status separately. Do not block the user on an AI turn or say a person is connected before acknowledgment.</li>
+    </ol>
+    <h3>Accessibility and localization</h3>
+    <p>Design for keyboard, screen reader, and mobile use (target WCAG 2.2 AA). Announce status transitions without stealing focus; do not use color alone to signal unsafe or pending states. Preserve policy section and effective date in translations, test time-zone rendering, and fall back to a human if no approved localized safety copy is available.</p>
+    <div class="note"><strong>Channel parity is a release gate.</strong> If a channel cannot securely authenticate the user or display meaningful confirmation, keep that journey read-only or send the user to the first-party web experience.</div>
+  </section>
+
+  <section class="sheet" id="identity" aria-labelledby="identity-title">
+    <header class="chapter">
+      <p class="kicker">04 / Trust and access</p>
+      <h2 id="identity-title">Identity and authorization</h2>
+      <p class="lead">A successful sign-in identifies the caller. It does not grant access to a vehicle, policy, dealer, or operation on its own.</p>
+    </header>
+    <table>
+      <caption>Proposed identity boundaries [02, 03]</caption>
+      <colgroup><col class="key"><col class="equal"><col class="equal"></colgroup>
+      <thead><tr><th scope="col">Principal</th><th scope="col">Authentication</th><th scope="col">Authorization scope</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Owner</th><td>Microsoft Entra External ID external tenant for customer identities. First-party session and token validation.</td><td>Only linked vehicles and the customer's own authorized operations. Verify transfers and changes to ownership in the system of record.</td></tr>
+        <tr><th scope="row">Employee / advisor</th><td>Workforce tenant, role assignment, and conditional access. Privileged roles require step-up and time-limited elevation.</td><td>Queue, market, and case assignment. Sensitive lookups use purpose and relationship checks, not organization-wide read access.</td></tr>
+        <tr><th scope="row">Dealer / partner</th><td>Entra B2B in the workforce tenant for named partner users; periodic external access review.</td><td>Only the partner's own workshop locations and assigned referrals. Offboard promptly when a relationship ends.</td></tr>
+        <tr><th scope="row">Workloads</th><td>Separate managed identities for runtime, retrieval, deployment, ingestion, and action workers. Partner federation or rotated credentials only where necessary.</td><td>Data-plane least privilege. Query identity cannot publish an index; workers cannot grant roles; the model has no write credentials.</td></tr>
+      </tbody>
+    </table>
+    <h3>How a request is authorized</h3>
+    <ol class="steps">
+      <li>Validate signature, issuer, audience, expiry, and required scopes for that surface. For a browser session, use secure, HTTP-only cookies, anti-CSRF controls, and origin checks. The identity directory and business account mapping are explicit; never link on email alone.</li>
+      <li>Resolve a trusted actor and tenant context from verified identity plus current vehicle or dealer relationships. The request and model may suggest an opaque reference, but cannot assign a role, market, consent state, or tenant.</li>
+      <li>At the private API boundary, validate the caller service token. Propagate the actor through a short-lived, audience-bound internal assertion with purpose and allowed operation. Use delegated OAuth only where the integration supports that tenant and grant. Never pass bearer tokens to prompts or tools.</li>
+      <li>Recheck role, resource ownership, policy version, and any required step-up before confirming and before dispatching a queued write. A worker uses its own identity and the recorded intent, not a stored user access token. Reject if current authorization cannot be established.</li>
+    </ol>
+    <div class="rule"><strong>Fail closed on identity ambiguity.</strong> Separate anonymous, customer, workforce, and partner cohorts. Test both denial and successful access for each cohort, including revoked membership and direct object access to citations, cases, and operation status.</div>
+  </section>
+
+  <section class="sheet" id="agent" aria-labelledby="agent-title">
+    <header class="chapter">
+      <p class="kicker">05 / Applied AI</p>
+      <h2 id="agent-title">AI runtime and guardrails</h2>
+      <p class="lead">Microsoft Foundry Agent Service and an Azure OpenAI model are proposed for interpreting requests and explaining evidence. They are not the policy engine or a transaction authority.</p>
+    </header>
+    <h3>The bounded turn</h3>
+    <ol class="steps">
+      <li>Apply input limits, privacy filtering, and approved safety rules in the gateway. Route urgent or uncertain safety requests to the deterministic path before retrieval or model invocation. A user can request a person at any time.</li>
+      <li>Resolve business intent and eligible context. For a policy question, the gateway fetches authorized excerpts through the retrieval adapter. Send only the question and the minimum relevant context; omit credentials, raw identifiers, unrelated case text, and hidden policy metadata. Keep the agent on approved tools and sources; no open-web access in the pilot.</li>
+      <li>Call a pinned Foundry agent/model deployment. If the agent proposes a read tool, the app checks its name, input schema, current actor and policy, executes it, and returns a minimal typed result [04]. Unknown tools or arguments are refused. Cap iterations, elapsed time, token count, and concurrent work per identity.</li>
+      <li>Treat the model output as a proposal. Validate its outcome schema and source IDs; cross-check citations against the exact retrieved versions. A valid citation is necessary but not sufficient: verify that the cited passages support the material claims. When validation is inconclusive, quote the approved text without expanding it or abstain. Apply safety and disclosure policy before rendering.</li>
+    </ol>
+    <table>
+      <caption>Typed outcomes returned by the gateway</caption>
+      <thead><tr><th scope="col">Outcome</th><th scope="col">Trust and display rule</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Cited answer / clarify</th><td>Show checked source IDs, date, scope, and exact section link. When model, market, or date is unknown, ask rather than silently assume.</td></tr>
+        <tr><th scope="row">Draft proposed / handoff required</th><td>Render a server-side draft or approved escalation guidance. No language-model tool may confirm an appointment or invent a queue receipt.</td></tr>
+        <tr><th scope="row">Abstain / action status</th><td>State that the evidence is insufficient, or display an existing server-verified transaction state. Use deterministic text for receipts.</td></tr>
+      </tbody>
+    </table>
+    <h3>Safety and evidence checks</h3>
+    <p>Use Azure AI Content Safety and model content filters as supporting controls, not a substitute for business policy. Treat retrieved documents, user messages, partner responses, and tool outputs as untrusted data, never instructions. Keep confirmation, escalation, permissions, and release criteria outside the prompt. Track model version, prompt version, risk policy, and evaluation-set version per release. Never stream unchecked factual claims or an apparent confirmation.</p>
+    <div class="note"><strong>Model selection is a release decision.</strong> Evaluate a compact and higher-capability Azure OpenAI model on the same cases, then choose the least expensive approved deployment that meets quality and latency goals. Check model, processing type, regional capacity, and safety controls together [05, 06]. Roll out changes to prompts, embeddings, and models as separate reviewed changes where possible.</div>
+  </section>
+
+  <section class="sheet" id="grounding" aria-labelledby="grounding-title">
+    <header class="chapter">
+      <p class="kicker">06 / Retrieval-augmented generation</p>
+      <h2 id="grounding-title">Knowledge and citations</h2>
+      <p class="lead">The source library must know which version is valid, whom it applies to, and whether that audience can read it before any text reaches an AI model.</p>
+    </header>
+    <figure aria-labelledby="grounding-caption">
+      <svg class="diagram" viewBox="0 0 760 189" role="img" aria-labelledby="grounding-image-title grounding-image-desc">
+        <title id="grounding-image-title">Approved publication and authorized retrieval</title>
+        <desc id="grounding-image-desc">In the publishing pipeline, approved sources become versioned excerpts with access metadata and enter separate search indexes. At runtime the verified audience selects matching excerpts, which the gateway verifies before showing citations.</desc>
+        <defs><marker id="knowledge-tip" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 8 4 0 8z" fill="#336753"/></marker></defs>
+        <rect class="boundary" x="1" y="1" width="758" height="86" rx="8"/>
+        <rect class="boundary" x="1" y="101" width="758" height="86" rx="8"/>
+        <text class="band-label" x="15" y="22">PUBLISH</text>
+        <text class="band-label" x="15" y="122">ANSWER</text>
+        <rect class="box" x="14" y="31" width="215" height="44" rx="7"/>
+        <rect class="box" x="270" y="31" width="215" height="44" rx="7"/>
+        <rect class="box emphasis" x="526" y="31" width="220" height="44" rx="7"/>
+        <text class="sub" x="26" y="58">Approve source and applicability</text>
+        <text class="sub" x="282" y="58">Chunk, label, and embed</text>
+        <text class="sub" x="538" y="58">Publish an index version</text>
+        <path class="arrow" d="M232 53h34" marker-end="url(#knowledge-tip)"/>
+        <path class="arrow" d="M488 53h34" marker-end="url(#knowledge-tip)"/>
+        <rect class="box" x="14" y="131" width="215" height="44" rx="7"/>
+        <rect class="box" x="270" y="131" width="215" height="44" rx="7"/>
+        <rect class="box emphasis" x="526" y="131" width="220" height="44" rx="7"/>
+        <text class="sub" x="26" y="158">Resolve trusted audience</text>
+        <text class="sub" x="282" y="158">Retrieve matching excerpts</text>
+        <text class="sub" x="538" y="158">Validate links and answer</text>
+        <path class="arrow" d="M232 153h34" marker-end="url(#knowledge-tip)"/>
+        <path class="arrow" d="M488 153h34" marker-end="url(#knowledge-tip)"/>
+        <path class="arrow" d="M637 78v15H376v32" stroke-dasharray="4 4" marker-end="url(#knowledge-tip)"/>
+      </svg>
+      <figcaption id="grounding-caption">Figure 2. Publish only approved and versioned material. Runtime retrieval uses the active index and derives the access filter from trusted context.</figcaption>
+    </figure>
+    <h3>Ingest and publish</h3>
+    <p>Source owners approve manuals, service bulletins, warranty policies, and safe support guidance before ingestion. Keep the canonical file or record under its owner's control. Reject unclassified content, extract text and section anchors, attach an owner and effective dates, and stage the new index before publishing. Use a versioned embedding deployment; change it by rebuilding and comparing the new index, not by mixing incompatible vectors. Approve language variants and retire withdrawn versions explicitly.</p>
+    <h3>Retrieve and verify</h3>
+    <p>Use distinct public and restricted corpora; split further where required by tenant or dealer exposure. For restricted content, enforce tenant, audience, market, model, locale, and effective-date scope in the retrieval service. Security filters must be derived from trusted roles or entitlement, never model-supplied. Use hybrid lexical and vector retrieval, optional semantic reranking, and vector prefiltering where supported [07, 08]. Abstain when evidence is missing or conflicts. An embedding or rank score is not an entitlement decision.</p>
+    <table>
+      <caption>Minimum metadata for every citable excerpt</caption>
+      <colgroup><col class="key"><col></colgroup>
+      <thead><tr><th scope="col">Metadata</th><th scope="col">Why it matters</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Identity and revision</th><td>Document ID, immutable version, excerpt/section ID, checksum, content owner, publication state.</td></tr>
+        <tr><th scope="row">Applicability</th><td>Effective and expiry dates, model/market/locale, classification, and audience or access tags.</td></tr>
+        <tr><th scope="row">Citation and removal</th><td>Stable reference to the excerpt via an authorization-checked route, plus index version and withdrawal timestamp.</td></tr>
+      </tbody>
+    </table>
+    <p class="small">Measure time from approval or revocation to query visibility in both regions. Recheck restricted link access when opened. On withdrawal or uncertain propagation, block the affected scope until refreshed; do not serve stale restricted answers from a shared cache.</p>
+  </section>
+
+  <section class="sheet" id="transactions" aria-labelledby="transactions-title">
+    <header class="chapter">
+      <p class="kicker">07 / Action service</p>
+      <h2 id="transactions-title">Confirming and executing actions</h2>
+      <p class="lead">A user confirms a specific, versioned draft. A successful HTTP call or an AI reply does not count as a booking receipt.</p>
+    </header>
+    <figure aria-labelledby="transaction-caption">
+      <svg class="diagram" viewBox="0 0 760 129" role="img" aria-labelledby="transaction-image-title transaction-image-desc">
+        <title id="transaction-image-title">Appointment confirmation and reconciliation states</title>
+        <desc id="transaction-image-desc">A preview expires without confirmation. Explicit confirmation queues a durable request. The provider can confirm or reject it, or the system enters needs review for an unknown provider outcome.</desc>
+        <defs><marker id="transaction-tip" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 8 4 0 8z" fill="#336753"/></marker></defs>
+        <rect class="box" x="1" y="10" width="174" height="49" rx="7"/>
+        <rect class="box emphasis" x="220" y="10" width="235" height="49" rx="7"/>
+        <rect class="box" x="500" y="10" width="259" height="49" rx="7"/>
+        <text class="title" x="14" y="40">Previewed</text>
+        <text class="title" x="233" y="40">Accepted and queued</text>
+        <text class="title" x="513" y="40">Confirmed or rejected</text>
+        <path class="arrow" d="M179 35h36" marker-end="url(#transaction-tip)"/>
+        <path class="arrow" d="M459 35h36" marker-end="url(#transaction-tip)"/>
+        <path class="arrow" d="M88 63v24" marker-end="url(#transaction-tip)"/>
+        <path class="arrow" d="M337 63v24" marker-end="url(#transaction-tip)"/>
+        <rect class="boundary" x="1" y="91" width="174" height="36" rx="7"/>
+        <rect class="boundary" x="220" y="91" width="539" height="36" rx="7"/>
+        <text class="sub" x="14" y="114">Expired or superseded</text>
+        <text class="sub" x="233" y="114">Unknown provider result: reconcile or send to a human, never confirm by assumption</text>
+      </svg>
+      <figcaption id="transaction-caption">Figure 3. The intermediate and unknown states are observable. Final confirmation requires a verified provider receipt.</figcaption>
+    </figure>
+    <ol class="steps">
+      <li><strong>Preview:</strong> Query live availability using a scoped read identity. Create an opaque draft bound to actor, vehicle, workshop, slot/version, expiry, and material conditions. Return a review card; do not reserve or change a record unless a separate approved hold policy exists.</li>
+      <li><strong>Confirm:</strong> An explicit user event presents the draft ID and idempotency key. Recheck current eligibility, actor, terms, expiry, and slot version. In one SQL transaction, consume the draft, create the operation record, and write an outbox row. Duplicate key plus same request returns the recorded status; a different request with the same key is rejected.</li>
+      <li><strong>Dispatch:</strong> An outbox relay publishes to Service Bus. A worker consumes with peek-lock, rechecks the operation and bounds retries, then calls the partner with the stable operation ID. Persist provider acknowledgment and final state before marking the message complete. Consumers handle redelivery idempotently [11, 12].</li>
+      <li><strong>Reconcile:</strong> If the provider times out after a possible commit, look up that operation first. Never blindly repeat an ambiguous non-idempotent write. Poll or surface pending status; escalate to an advisor when the partner cannot verify it. The partner remains the source of truth.</li>
+    </ol>
+    <table>
+      <caption>Example API surface; route names are illustrative (outbox rationale in [22])</caption>
+      <colgroup><col class="route"><col></colgroup>
+      <thead><tr><th scope="col">Operation</th><th scope="col">Contract</th></tr></thead>
+      <tbody>
+        <tr><th scope="row"><code>POST /v1/appointments/preview</code></th><td>Returns draft, display terms, and expiry. No durable external booking.</td></tr>
+        <tr><th scope="row"><code>POST /v1/appointments/confirm</code></th><td>Returns <code>202</code> and operation ID on acceptance; <code>409</code> for stale or mismatched draft. The model has no access to this route.</td></tr>
+        <tr><th scope="row"><code>GET /v1/operations/{id}</code></th><td>Access-checked status; includes the provider's reference only after verified acceptance.</td></tr>
+      </tbody>
+    </table>
+    <p class="small">If a provider cannot meet the identifier or reconciliation contract, keep that provider's booking journey human-assisted. Start by adding read-only warranty, workshop, and status adapters; add create, cancel, and reschedule only under their own approval rules.</p>
+  </section>
+
+  <section class="sheet" id="handoff" aria-labelledby="handoff-title">
+    <header class="chapter">
+      <p class="kicker">08 / Service operations</p>
+      <h2 id="handoff-title">Human handoff and failure behavior</h2>
+      <p class="lead">Make escalation an actual workflow with a receipt, an owner, and a fallback. Do not ask a person in danger to wait for the chatbot.</p>
+    </header>
+    <h3>Escalation protocol</h3>
+    <ol class="steps">
+      <li>Apply approved safety categories and locale-aware rules before AI. Present safety-team-approved wording and the appropriate local emergency or roadside route immediately for urgent concerns. Do not diagnose or generate repair instructions for a high-risk event.</li>
+      <li>Build a minimized handoff package: reason code, urgency, locale, verified identity state, scoped vehicle and case references, approved citations already shown, and the last action state. Share only necessary context with an assigned queue; distinguish user-reported facts from AI summaries.</li>
+      <li>Route incidents to the relevant Dynamics 365 Customer Service queue. Agree routing rules and staffed hours with operations. For native Copilot Studio handoff, require a supported channel, compatible licenses, and the same Power Platform environment as Customer Service [09]. Validate the first-party web path separately.</li>
+      <li>Use <strong>offered</strong>, <strong>queued</strong>, and <strong>accepted</strong> as separate statuses. If the queue cannot acknowledge, surface an alternate human route, persist the case only if that workflow is available, and state that the transfer did not occur. Do not send the full transcript by default.</li>
+    </ol>
+    <table>
+      <caption>Degradation matrix</caption>
+      <colgroup><col class="key"><col class="equal"><col class="equal"></colgroup>
+      <thead><tr><th scope="col">Condition</th><th scope="col">User-visible behavior</th><th scope="col">Operational action</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Safety trigger or uncertain urgent risk</th><td>Approved safety wording and a direct human route. No automated diagnosis or transaction.</td><td>Measure missed escalations and incorrect automated actions; page support on a confirmed critical event.</td></tr>
+        <tr><th scope="row">Search or model unavailable</th><td>Do not offer an unsupported answer. Offer approved static public help or a human.</td><td>Open dependency circuit, limit waiting work, and re-enable after health and quality checks.</td></tr>
+        <tr><th scope="row">Authorization or eligibility cannot be checked</th><td>No protected answer or write. Offer sign-in, retry, or a supported handoff.</td><td>Distinguish identity failures from source-of-truth outages; keep audit and alert records.</td></tr>
+        <tr><th scope="row">Workshop timeout or duplicate callback</th><td>Pending or needs review, not confirmed. Show verified status later.</td><td>Reconcile by stable reference, deduplicate callbacks, and escalate aged cases.</td></tr>
+        <tr><th scope="row">Queue unavailable or out of hours</th><td>Provide an approved phone or web fallback and say whether a case was actually queued.</td><td>Page queue owner; verify restored acceptance before returning to normal routing.</td></tr>
+      </tbody>
+    </table>
+    <div class="rule"><strong>Service ownership:</strong> Safety owns approved wording and escalation thresholds; Customer Service owns routing and staffing; Platform owns technical availability. A human advisor may override policy only through an existing authorized, auditable business workflow.</div>
+  </section>
+
+  <section class="sheet" id="topology" aria-labelledby="topology-title">
+    <header class="chapter">
+      <p class="kicker">09 / Platform design</p>
+      <h2 id="topology-title">Azure network and hosting topology</h2>
+      <p class="lead">Expose a deliberate HTTPS edge for interactive channels. Keep AI, tools, and data private. Connections to managed SaaS are an explicit exception, not implicit trust.</p>
+    </header>
+    <figure aria-labelledby="topology-caption">
+      <svg class="diagram" viewBox="0 0 760 268" role="img" aria-labelledby="topology-image-title topology-image-desc">
+        <title id="topology-image-title">Network and deployment boundaries</title>
+        <desc id="topology-image-desc">Customer and partner portals and the Copilot Studio channel call the public Front Door edge. Private Link reaches the App Service gateway in the primary region. The gateway reaches private API Management and private AI and data services. A recovery region uses the same boundaries with a single authorized write region.</desc>
+        <defs><marker id="topology-tip" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 8 4 0 8z" fill="#336753"/></marker></defs>
+        <rect class="box" x="1" y="12" width="221" height="54" rx="7"/>
+        <text class="title" x="13" y="34">Browser / Teams adapter</text>
+        <text class="sub" x="13" y="53">Signed-in or public scope</text>
+        <rect class="box emphasis" x="269" y="12" width="257" height="54" rx="7"/>
+        <text class="title" x="281" y="34">Front Door Premium + WAF</text>
+        <text class="sub" x="281" y="53">Public HTTPS and narrow routes</text>
+        <path class="arrow" d="M226 40h38" marker-end="url(#topology-tip)"/>
+        <path class="arrow" d="M398 68v22" marker-end="url(#topology-tip)"/>
+        <rect class="boundary" x="1" y="93" width="548" height="174" rx="9"/>
+        <text class="band-label" x="14" y="115">PRIMARY WORKLOAD SPOKE</text>
+        <rect class="box" x="14" y="126" width="523" height="48" rx="7"/>
+        <text class="title" x="26" y="146">Private Link origin: App Service interaction gateway</text>
+        <text class="sub" x="26" y="163">Separate outbound VNet integration for workload calls</text>
+        <path class="arrow" d="M139 176v22" marker-end="url(#topology-tip)"/>
+        <path class="arrow" d="M406 176v22" marker-end="url(#topology-tip)"/>
+        <rect class="box" x="14" y="200" width="248" height="53" rx="7"/>
+        <text class="sub" x="26" y="221">Private APIM to Functions</text>
+        <text class="sub" x="26" y="241">SQL and Service Bus private endpoints</text>
+        <rect class="box" x="278" y="200" width="259" height="53" rx="7"/>
+        <text class="sub" x="290" y="221">Private Foundry / Search / Storage</text>
+        <text class="sub" x="290" y="241">Approved egress to SaaS or partners</text>
+        <rect class="boundary" x="567" y="93" width="192" height="174" rx="9"/>
+        <text class="band-label" x="578" y="115">RECOVERY SPOKE</text>
+        <text class="sub" x="578" y="143">Warm app and private links</text>
+        <text class="sub" x="578" y="166">Prebuilt index and quota</text>
+        <text class="sub" x="578" y="189">Controlled data failover</text>
+        <text class="sub" x="578" y="212">Writes off until promotion</text>
+        <path class="arrow" d="M527 40h137v49" stroke-dasharray="4 4" marker-end="url(#topology-tip)"/>
+      </svg>
+      <figcaption id="topology-caption">Figure 4. The dashed path is a recovery origin, not permission to run two independent writers. A platform hub provides private DNS, approved egress, and operational access to each spoke.</figcaption>
+    </figure>
+    <table>
+      <caption>Proposed production placements and compatibility checks [10, 11, 13–15, 21]</caption>
+      <colgroup><col class="key"><col></colgroup>
+      <thead><tr><th scope="col">Layer</th><th scope="col">Target and validation</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Edge and gateway</th><td>Front Door Premium WAF and managed private link to a supported zone-redundant App Service Premium plan. Verify origin health, host routing, certificate rotation, and no direct public origin access. Disable caching for authenticated conversation and status routes.</td></tr>
+        <tr><th scope="row">Private actions</th><td>API Management Standard v2 with inbound private endpoint and outbound VNet integration; validate tier/region and DNS. Use Functions Elastic Premium for private HTTP and worker execution, with private host storage and a verified scale configuration.</td></tr>
+        <tr><th scope="row">AI and data</th><td>Private endpoints to Foundry, Azure AI Search, Storage, SQL, Service Bus Premium, and Key Vault as applicable. Verify the selected Standard private Foundry setup and its Storage, Search, and Cosmos DB dependencies; managed agent state is separate from the business ledger.</td></tr>
+      </tbody>
+    </table>
+    <p>Use distinct subnets for integration, private endpoints, and any Foundry runtime injection required by the selected setup. Link approved private DNS zones and test resolution from each runtime and deployment runner. Route outbound traffic through approved egress; authenticate and restrict SaaS callbacks. Keep SaaS routes and deployment access documented separately from the private data plane.</p>
+    <p>A partner or SaaS service outside the VNet still needs scoped credentials, bounded egress, and a contract for callback identity and replay handling. Expose callbacks only at a separate authenticated gateway route; do not expose a worker or database endpoint to the public internet.</p>
+  </section>
+
+  <section class="sheet" id="data" aria-labelledby="data-title">
+    <header class="chapter">
+      <p class="kicker">10 / Information lifecycle</p>
+      <h2 id="data-title">Data ownership, privacy, and governance</h2>
+      <p class="lead">Minimize what a conversation needs to know. Preserve the source of truth and separate transaction evidence from debug traces.</p>
+    </header>
+    <table>
+      <caption>Proposed data boundaries</caption>
+      <colgroup><col class="key"><col class="equal"><col class="equal"></colgroup>
+      <thead><tr><th scope="col">Data class</th><th scope="col">Record owner / storage</th><th scope="col">Controls</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Manuals and policy</th><td>Product and warranty owners publish approved documents. Azure AI Search stores scoped excerpts.</td><td>Version and classify on ingestion. Remove withdrawn content from serving indexes.</td></tr>
+        <tr><th scope="row">Customer and vehicle</th><td>Customer, vehicle, and warranty systems; read through narrow adapters.</td><td>Purpose-limited queries using opaque references. Never index customer or vehicle identifiers for AI.</td></tr>
+        <tr><th scope="row">Bookings and cases</th><td>Workshop owns bookings, Dataverse owns cases, and SQL owns drafts and the outbox.</td><td>Restrict roles and data transfer. Retain confirmation and provider receipt evidence.</td></tr>
+        <tr><th scope="row">Conversation state</th><td>Gateway owns scoped context. Use Foundry project storage only when required.</td><td>Bound and redact model context. Verify processing, retention and deletion [16].</td></tr>
+        <tr><th scope="row">Audit and analytics</th><td>Restricted audit sink, Azure Monitor, and optional Fabric reporting.</td><td>No full prompts in traces. Restrict audit reads and export only approved aggregates.</td></tr>
+      </tbody>
+    </table>
+    <h3>Processing and retention</h3>
+    <p>Privacy owners approve purpose and legal basis by journey. Distinguish consent to communicate or share case data from confirmation of an appointment. Set separate retention for session state, telemetry, cases, and audit. Define access and deletion across primary stores, search, provider state, queues, logs, and backups; track legal holds separately.</p>
+    <h3>Residency, secrets, and oversight</h3>
+    <p>Validate processing locations for edge traffic, SaaS, backups, AI inference, and manual review; resource location alone is not sufficient. Prefer private access, managed identity, TLS, and encryption at rest. Use RBAC, soft delete, and purge protection for Key Vault [17]. Catalog sensitive assets in Purview and assign ownership for connector policy and Defender alerts.</p>
+    <div class="rule"><strong>Production gate:</strong> sign off a data-flow inventory, residency constraints, retention schedule, and audit access model before admitting real data. Do not infer regulatory compliance from Azure service selection.</div>
+  </section>
+
+  <section class="sheet" id="reliability" aria-labelledby="reliability-title">
+    <header class="chapter">
+      <p class="kicker">11 / Resilience</p>
+      <h2 id="reliability-title">Reliability and disaster recovery</h2>
+      <p class="lead">Degrade to useful read-only or human support. Keep writes fenced to one region until the new writer and provider reconciliation are verified.</p>
+    </header>
+    <table>
+      <caption>Proposed engineering objectives; validate with measured pilot data</caption>
+      <colgroup><col class="key"><col class="equal"><col class="equal"></colgroup>
+      <thead><tr><th scope="col">Signal</th><th scope="col">Draft target</th><th scope="col">How to measure</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Core journey availability</th><td>99.9% monthly for eligible authenticated requests.</td><td>Count timely, contract-correct outcomes, including warranted abstention, not HTTP 200 alone. Dependency failure is not successful abstention. Report partner outcomes separately.</td></tr>
+        <tr><th scope="row">Policy answer latency</th><td>P95 at or below 5 seconds to a validated outcome.</td><td>Per locale and journey under agreed pilot load; track first status signal separately from final answer.</td></tr>
+        <tr><th scope="row">Action acceptance</th><td>P95 at or below 2 seconds to queued status, not partner confirmation.</td><td>Time explicit confirmation to durable commit. Report partner receipt time and aged pending separately.</td></tr>
+        <tr><th scope="row">Disaster recovery</th><td>RTO within 60 minutes; workflow data RPO within 5 minutes pending drills.</td><td>Measure from the regional incident to verified restore and last recoverable record. Neither is a provider guarantee.</td></tr>
+      </tbody>
+    </table>
+    <h3>Normal operations and pressure</h3>
+    <p>Run zone-redundant compute where supported and separate workers from interactive turns. Apply request deadlines, bounded queues, jittered retries for safe reads, and per-dependency circuit breakers. Reserve capacity for safety and recovery work. Scale and alert on p95 latency, concurrency, queue age, and model/search throttling rather than CPU alone. Use static approved support only when its scope and version are known.</p>
+    <h3>Regional failover runbook</h3>
+    <ol class="steps">
+      <li>Incident lead disables new writes, captures the last confirmed operation watermark, and verifies that the old writer is fenced. Serve safe read-only support or handoff from an approved recovery origin.</li>
+      <li>Validate private DNS, identity, partner connectivity, approved knowledge version, and quota in the secondary region. Rebuild the index from approved sources rather than assuming a cross-region search replica. Keep a durable outbox so queue recovery does not depend on the broker alone.</li>
+      <li>Promote the database using the approved SQL failover policy. Regional replication is asynchronous; forced failover may lose recent records [18]. Reconcile with partner receipts and replay the outbox only with deduplication and authorization checks.</li>
+      <li>Run synthetic read, handoff, and write-verification probes. Reopen writes gradually after owner approval. Plan a failback drill, document evidence, and keep failback separate from recovery.</li>
+    </ol>
+    <p class="small">Evaluate Sweden Central as primary and a second compliant region for recovery. Confirm all paired dependencies, SaaS geographies, private links, and quotas together. Do not switch to a global model deployment as an unreviewed workaround for a regional outage.</p>
+  </section>
+
+  <section class="sheet" id="operations" aria-labelledby="operations-title">
+    <header class="chapter">
+      <p class="kicker">12 / Run the service</p>
+      <h2 id="operations-title">Operational signals and response</h2>
+      <p class="lead">Measure whether users received a correct and safe outcome, not only whether the model or endpoint answered.</p>
+    </header>
+    <h3>Observability and audit</h3>
+    <p>Propagate a server-generated correlation ID and W3C trace context across the gateway, retrieval, Functions, outbox, and queue processing. Send minimized OpenTelemetry metrics and traces to Azure Monitor/Application Insights with controlled Log Analytics retention [19]. Measure technical availability and safety independently. Audit records are not subject to normal trace sampling and do not contain secrets or prompt transcripts.</p>
+    <table>
+      <caption>Dashboards, example triggers, and responsibilities</caption>
+      <colgroup><col class="key"><col class="equal"><col class="equal"></colgroup>
+      <thead><tr><th scope="col">Signal</th><th scope="col">Escalation trigger</th><th scope="col">First response</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Journey availability and p95</th><td>Error-budget burn across two time windows, rising provider errors, or synthetic journey failure.</td><td>Platform on-call checks regional and dependency health and enables read-only mode if necessary.</td></tr>
+        <tr><th scope="row">Evidence and quality</th><td>Growing unauthorized, stale, broken, or unsupported citations; quality regression by vehicle model or locale.</td><td>Knowledge and AI owners quarantine the affected scope, roll back index or release versions, and review sampled failures.</td></tr>
+        <tr><th scope="row">Operation and queue health</th><td>Oldest pending operation or dead-letter volume exceeds the agreed threshold.</td><td>Integration owner traces the outbox and provider references. Suspend that connector before any replay if acceptance is uncertain.</td></tr>
+        <tr><th scope="row">Safety, privacy, or duplicate action</th><td>Any confirmed critical unsafe answer, unauthorized disclosure, or unintended duplicate booking.</td><td>Page service and security owners; disable affected automation, preserve minimized evidence, and use an approved human fallback.</td></tr>
+        <tr><th scope="row">Cost and saturation</th><td>Sustained model throttling, telemetry ingestion growth, or spend above an approved alert threshold.</td><td>Platform and FinOps confirm the cause; enforce per-request budgets without disabling urgent support.</td></tr>
+      </tbody>
+    </table>
+    <h3>Minimum audit and release evidence</h3>
+    <p>Record actor reference and role, policy and release version, action or escalation type, server decision, confirmation and receipt references where relevant, timestamp in UTC, and correlation ID. Logs and business records must distinguish request, approval, execution, and reconciliation. Restrict access and verify expiry; use immutable retention only where approved and compatible with deletion and legal-hold obligations.</p>
+    <div class="rule"><strong>Operational owner required.</strong> Every production alert needs a named team, threshold, response window, and runbook link. Before pilot, practice a stale-policy rollback, model outage, partner timeout, and handoff-queue failure with real on-call ownership.</div>
+  </section>
+
+  <section class="sheet" id="delivery" aria-labelledby="delivery-title">
+    <header class="chapter">
+      <p class="kicker">13 / Engineering and release controls</p>
+      <h2 id="delivery-title">Environments, delivery, and security checks</h2>
+      <p class="lead">Ship infrastructure, code, content, policy, and AI configuration as coordinated but independently reversible releases.</p>
+    </header>
+    <h3>Environment design</h3>
+    <p>Separate development, staging, and production subscriptions or approved isolation boundaries; use distinct Power Platform environments, identities, DNS routes, resources, quotas, and secret scopes. Keep development synthetic. Build staging to validate production network, permissions, and recovery using test partners and nonproduction identities. Never reuse the demo's app registration or data store for production.</p>
+    <h3>Repeatable release pipeline</h3>
+    <ol class="steps">
+      <li>Manage Azure resources as modular Bicep. Use a separate approved workflow for Entra and Power Platform configuration. In CI use GitHub Actions OpenID Connect federation with environment-scoped roles, protected branches, and separate approvals for production [20]. Use private runner access where needed.</li>
+      <li>Build immutable artifacts and record runtime, API, model, prompt, tool schema, policy, and knowledge index versions. Validate Bicep, scan artifacts and dependencies, and review the ARM what-if output before deployment. Keep data-plane permissions and connector owners in the release checklist.</li>
+      <li>Run integration and policy evaluations in staging; use small, reversible canaries. Version API contracts and use expand-and-contract schema changes. Switch to a prior approved index or compatible app release on regression. Do not roll back a partner booking by replaying an old artifact.</li>
+      <li>Use independent flags for generative answers, partner writes, and each channel. Safety handoff stays available when an AI feature is disabled. Keep a kill switch for each connector, test it in drills, and record privileged changes.</li>
+    </ol>
+    <table>
+      <caption>Defense-in-depth checks before exposure</caption>
+      <colgroup><col class="key"><col></colgroup>
+      <thead><tr><th scope="col">Risk</th><th scope="col">Controls and verification</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Wrong tenant, vehicle, or dealer</th><td>Verified token and relationship checks at gateway and service; deny independently when context is missing or no longer valid.</td></tr>
+        <tr><th scope="row">Untrusted content influencing a write</th><td>Use strict tool schemas, no commit tool on the model, and user-bound confirmation independent of chat text. Test adversarial safety and authorization outcomes with synthetic data.</td></tr>
+        <tr><th scope="row">Misconfiguration or unsafe rollout</th><td>Private endpoint and DNS checks, scoped identities, environment policies, independent review, and canary rollback evidence. Use Power Platform connector data policies in addition to service authorization.</td></tr>
+      </tbody>
+    </table>
+    <p class="small">Operational readiness includes a maintained inventory, service owners, rotation and offboarding jobs, backup and restore exercises, and independent security and accessibility sign-off.</p>
+  </section>
+
+  <section class="sheet" id="rollout" aria-labelledby="rollout-title">
+    <header class="chapter">
+      <p class="kicker">14 / Path to production</p>
+      <h2 id="rollout-title">Rollout and acceptance criteria</h2>
+      <p class="lead">Expand in stages. Passing a prototype walkthrough does not authorize live data access or writes.</p>
+    </header>
+    <table>
+      <caption>Illustrative eight-week pilot sequence; progress depends on gates</caption>
+      <colgroup><col class="period"><col><col></colgroup>
+      <thead><tr><th scope="col">Window</th><th scope="col">Deliverable</th><th scope="col">Exit gate</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Weeks 1–2</th><td>Select one model and two partners. Review source ownership, legal purposes, consent, safety language, APIs, and baseline support demand.</td><td>Product, Safety, Privacy, and integration owners sign off scope, safe copy, tenant isolation, and test data.</td></tr>
+        <tr><th scope="row">Weeks 3–4</th><td>Deploy the private AI and search path in nonproduction. Compare read-only responses with advisor decisions; add restricted human handoff.</td><td>Approved data only; measured retrieval, citation accuracy, abstention, latency, and authorization denial.</td></tr>
+        <tr><th scope="row">Weeks 5–6</th><td>Add read-only partner lookup, then confirmation, outbox, and reconciliation in a partner sandbox. Canary write access only after readiness review.</td><td>No unintended writes in retry, replay, expiry, timeout, revocation, and recovery tests. Partner returns stable receipts.</td></tr>
+        <tr><th scope="row">Weeks 7–8</th><td>Run the limited pilot. Drill incident handling and failover, then compare outcomes against the baseline.</td><td>Signed evaluation for quality, safety, operations, accessibility, privacy, and cost. Make a go/no-go decision before broad rollout.</td></tr>
+      </tbody>
+    </table>
+    <h3>Quality and safety gates</h3>
+    <ul>
+      <li><strong>Citations and groundedness:</strong> target at least 90% of factual answers with an approved, applicable citation and at least 85% advisor-rated grounded-answer acceptance. Sample all scoped market and language combinations; verify authorization and exact excerpts.</li>
+      <li><strong>Completion:</strong> target at least 80% correct task completion across the three scoped journeys. Count an appropriate handoff as success only when the expected next step is delivered. Track successful partner receipt separately.</li>
+      <li><strong>Non-negotiable:</strong> no observed critical privacy or safety failure or unintended booking in the controlled release set. Required escalation paths pass every defined case. A failed or underpowered safety evaluation blocks expansion; zero observed failures do not establish zero risk.</li>
+    </ul>
+    <p>Build evaluation sets with content owners and advisors. Include sparse or conflicting policy, multilingual and inaccessible sources, entitlement denial, partner errors, and recovery drills. Use model-based evaluation to triage, with human review for safety, disagreement, and sampled output quality [06].</p>
+    <div class="note"><strong>Measure value against an agreed baseline.</strong> The concept's 25% handling-time reduction, 35% informational containment, and 30% reduction in incomplete handoffs are hypotheses, not achieved results. Publish denominators and confidence limits where meaningful.</div>
+  </section>
+
+  <section class="sheet" id="decisions" aria-labelledby="decisions-title">
+    <header class="chapter">
+      <p class="kicker">15 / Decisions and trade-offs</p>
+      <h2 id="decisions-title">Sizing, costs, and open decisions</h2>
+      <p class="lead">Prove demand and correctness before committing to multi-region capacity or widening the set of permitted actions.</p>
+    </header>
+    <h3>Capacity and cost model</h3>
+    <p>Measure peak requests per second, concurrent conversations, turns per journey, input and output tokens per turn, indexed chunk count, query bursts, partner rate limits, and daily run hours. Estimate model spend by multiplying input and output tokens by their own unit prices; include embedding and evaluation calls. Estimate search, APIM, compute, SQL, messaging, backup, edge, monitoring, and licenses separately. Include warm recovery capacity, egress, and on-call ownership.</p>
+    <p>Start with a quota-verified pay-as-you-go model and grow only after measuring concurrency and latency. Bound per-turn tokens, tool calls, trace volume, and transaction queue depth. Budget alerts are signals, not spending caps. Track periodic cost per completed eligible journey and per human handoff instead of just the monthly bill. No contract pricing or live resource configuration is assumed here.</p>
+    <table>
+      <caption>Decision register: recommended starting position and evidence needed</caption>
+      <colgroup><col class="key"><col class="equal"><col class="equal"></colgroup>
+      <thead><tr><th scope="col">Decision</th><th scope="col">Proposed default and trade-off</th><th scope="col">Owner / evidence</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Channel integration</th><td>First-party web gateway first, then Teams/Copilot Studio and partner portal. Adds an owned service but keeps one source of policy.</td><td>Product and Identity: tested channel authentication and equivalent confirmation.</td></tr>
+        <tr><th scope="row">Model and corpus</th><td>Foundry agent with a pinned Azure OpenAI deployment and explicit search adapter. Avoid open-web grounding; the gateway must control document access.</td><td>AI and Knowledge: quality, data-processing review, feature availability, and quota in both regions.</td></tr>
+        <tr><th scope="row">Transaction persistence</th><td>Azure SQL ledger and outbox rather than in-memory or agent state. Adds operational cost but supports durable status and atomic confirmation.</td><td>Integration: stable provider operation ID, safe lookup contract, and retry, reconciliation, and load results.</td></tr>
+        <tr><th scope="row">Availability and region</th><td>Zone-redundant primary, warm secondary, single writer. More recovery discipline than active-active; safer than concurrent partner writes.</td><td>Platform and Privacy: paired-placement review, secondary capacity, tested restoration and reconciliation.</td></tr>
+        <tr><th scope="row">Programs and compliance</th><td>Separate operational audit and aggregate analytics. Add Fabric only when reporting use and licensing are approved. Keep global edge processing under review.</td><td>Service, Privacy, and FinOps: retention, staffing, deployment region, and cost approvals.</td></tr>
+      </tbody>
+    </table>
+    <div class="rule"><strong>First production readiness checkpoint:</strong> settle the channel/tenant strategy, partner idempotency contract, approved evidence inventory, regional pairing and licenses, data handling, and testable SLOs. Do not fill these decisions with assumptions at deployment time.</div>
+  </section>
+
+  <section class="sheet" id="references" aria-labelledby="references-title">
+    <header class="chapter">
+      <p class="kicker">Appendix / Review sources</p>
+      <h2 id="references-title">References and design vocabulary</h2>
+      <p class="lead">These references explain platform behavior. Check regional availability, plan limitations, and current documentation again before provisioning.</p>
+    </header>
+    <ol class="sources" aria-label="Numbered platform references">
+      <li><a href="https://learn.microsoft.com/en-us/azure/well-architected/pillars">Azure Well-Architected Framework pillars</a></li>
+      <li><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/configuration-end-user-authentication">Copilot Studio user authentication</a></li>
+      <li><a href="https://learn.microsoft.com/en-us/entra/external-id/external-identities-overview">Entra External ID: customer and workforce tenants</a></li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/tools/function-calling">Foundry Agent Service function calling</a></li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/deployments-overview">Foundry model deployment options</a></li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/foundry/concepts/evaluation-overview">Foundry quality and safety evaluation</a></li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/search/search-document-level-access-overview">Azure AI Search document-level access</a></li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/search/hybrid-search-overview">Azure AI Search hybrid retrieval</a></li>
+      <li><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/configuration-hand-off-omnichannel">Dynamics 365 Customer Service handoff</a></li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/frontdoor/private-link">Azure Front Door Premium Private Link</a></li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/service-bus-messaging/private-link-service">Service Bus private network access</a></li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-message-loss-and-duplicates">Service Bus delivery and duplicates</a></li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/api-management/virtual-network-concepts">API Management virtual network options</a></li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/azure-functions/functions-networking-options">Azure Functions networking options</a></li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/foundry/agents/how-to/virtual-networks">Foundry Agent Service private networking</a></li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/foundry/responsible-ai/openai/data-privacy">Foundry data privacy and processing</a></li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/key-vault/general/key-vault-recovery">Key Vault recovery and purge protection</a></li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/azure-sql/database/failover-group-sql-db?view=azuresql">Azure SQL failover groups</a></li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-configuration">Application Insights and OpenTelemetry</a></li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-github-actions">Deploy Bicep with GitHub Actions and OIDC</a></li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/reliability/reliability-app-service">App Service reliability and zone redundancy</a></li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/architecture/databases/guide/transactional-out-box-cosmos">Transactional outbox pattern (Cosmos example)</a></li>
+    </ol>
+    <h3>Terms used in this design</h3>
+    <table>
+      <colgroup><col class="key"><col></colgroup>
+      <thead><tr><th scope="col">Term</th><th scope="col">Meaning here</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Grounding / RAG</th><td>Retrieve approved, applicable evidence and use only that evidence to support the answer. RAG means retrieval-augmented generation.</td></tr>
+        <tr><th scope="row">Idempotency / outbox</th><td>Processing the same logical action twice must not repeat its effect. Store a pending event in the same durable transaction as the operation before publishing to a queue.</td></tr>
+        <tr><th scope="row">SLO / RTO / RPO</th><td>Service level objective, target recovery time, and target maximum acceptable age of lost data during recovery.</td></tr>
+        <tr><th scope="row">Security trimming</th><td>Remove unauthorized results before any content reaches the model or caller, then enforce authorization again when a restricted citation is opened.</td></tr>
+      </tbody>
+    </table>
+    <p class="small">Repository: <a href="https://github.com/martinabrle/htb">martinabrle/htb</a>. The proposed design follows the review themes of the <a href="https://learn.microsoft.com/en-us/azure/well-architected/pillars">Azure Well-Architected Framework [01]</a>; it is not a compliance or platform availability certification.</p>
+  </section>
+</main>
+</body>
+</html>

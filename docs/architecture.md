@@ -1,6 +1,6 @@
 # Trabant Leap Agent POC architecture
 
-The [Hack to Build concept](../idea/HTB-Idea-Review-Mobility-solution.md) describes a production target. This demo tests the interaction between grounded support and confirmed actions before adding live AI or enterprise integrations. It is fictional and not for real vehicle support.
+The [Hack to Build concept](../idea/HTB-Idea-Review-Mobility-solution.md) describes a production target. See the [target system architecture PDF](./target-system-architecture.pdf) for the full proposal, or the [editable HTML source](./target-system-architecture.html). This page describes the fictional demo that tests the interaction between grounded support and confirmed actions before adding live AI or enterprise integrations. It is not for real vehicle support.
 
 ```mermaid
 flowchart LR
